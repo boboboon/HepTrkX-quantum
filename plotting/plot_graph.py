@@ -217,12 +217,16 @@ def plot_3d(filenames,n_section,n_files, make_gif=False):
     ax.dist = 8 
     plt.savefig(pdf_dir+'Cartesian3D.pdf')
     plt.savefig(png_dir+'Cartesian3D.png')
+
     if make_gif == True:
 	    # Make Gif
-	    rotation_angle = 360  # total rotation angle in degrees
-	    duration = 	5 # duration of gif in seconds
-	    anim = FuncAnimation(fig, change_view, frames=np.arange(0, rotation_angle), interval=duration*1000/rotation_angle)
-	    anim.save(gif_dir+'Cartesian3D.gif', dpi=80, writer='PillowWriter')   
+        rotation_angle = 360  # total rotation angle in degrees
+        duration = 	5 # duration of gif in seconds
+        anim = FuncAnimation(fig, change_view, frames=np.arange(0, rotation_angle), interval=duration*1000/rotation_angle)
+        anim.save(gif_dir+'Cartesian3D.gif', dpi=80, writer='PillowWriter')   
+        
+        
+	    
 def plot_combined(filenames,n_section):
 
         print('Plotting file: ' + filenames[1] + ' to: ' + pdf_dir)

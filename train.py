@@ -46,11 +46,11 @@ if __name__ == '__main__':
 		from qnetworks.TTN1 import GNN
 	elif config['network'] == 'TTN' and config['hid_dim'] == 2:     # load q. networks with 2 Hid. Dim. 
 		from qnetworks.TTN2 import GNN
-	elif config['network'] == 'TTN' and config['hid_dim'] == 0:     # load q. networks with 2 Hid. Dim. 
+	elif config['network'] == 'TTN' and config['hid_dim'] == 0:     # load q. networks with 0 Hid. Dim. 
 		from qnetworks.TTN0 import GNN
-	elif config['network'] == 'MERA' and config['hid_dim'] == 1:     # load q. networks with 2 Hid. Dim. 
+	elif config['network'] == 'MERA' and config['hid_dim'] == 1:     # load q. networks with 1 Hid. Dim. 
 		from qnetworks.MERA1 import GNN
-	elif config['network'] == 'MPS' and config['hid_dim'] == 1:     # load q. networks with 2 Hid. Dim. 
+	elif config['network'] == 'MPS' and config['hid_dim'] == 1:     # load q. networks with 1 Hid. Dim. 
 		from qnetworks.MPS1 import GNN
 	elif config['network'] == 'QGNN' and config['hid_dim'] == 5:     # load q. networks with 5 Hid. Dim. 
 		from qnetworks.GNN5 import GNN
