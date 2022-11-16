@@ -26,7 +26,8 @@ def parse_args():
     """Parse command line arguments."""
     parser = argparse.ArgumentParser('prepare.py')
     add_arg = parser.add_argument
-    add_arg('config', nargs='?', default='configs/prepare_trackml.yaml')
+    #add_arg('config', nargs='?', default='configs/prepare_trackml.yaml') <-- This file isn't in the config so trying prep below
+    add_arg('config', nargs='?', default='configs/prep.yaml') 
     add_arg('--n-workers', type=int, default=1)
     add_arg('--task', type=int, default=0)
     add_arg('--n-tasks', type=int, default=1)
@@ -229,7 +230,7 @@ def main():
 
     # Load configuration
     with open(args.config) as f:
-        config = yaml.load(f)
+        config = yaml.load(f,Loader=yaml.Loader)
     if args.task == 0:
         logging.info('Configuration: %s' % config)
 
@@ -253,10 +254,17 @@ def main():
     os.makedirs(output_dir, exist_ok=True)
     logging.info('Writing outputs to ' + output_dir)
 
+
+    
+
+
     # Process input files with a worker pool
     with mp.Pool(processes=args.n_workers) as pool:
         process_func = partial(process_event, output_dir=output_dir,
                                phi_range=(-np.pi, np.pi), **config['selection'])
+
+        print('HERE:',process_func)
+        print('HERE2:',file_prefixes)                       
         pool.map(process_func, file_prefixes)
 
     # Drop to IPython interactive shell
