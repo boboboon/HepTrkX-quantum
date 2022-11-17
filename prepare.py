@@ -256,7 +256,7 @@ def main():
 
 
     
-
+    
 
     # Process input files with a worker pool
     with mp.Pool(processes=args.n_workers) as pool:
@@ -264,7 +264,8 @@ def main():
                                phi_range=(-np.pi, np.pi), **config['selection'])
 
         print('HERE:',process_func)
-        print('HERE2:',file_prefixes)                       
+        print('HERE2:',file_prefixes)        
+        print('HERE3',process_func.reshape(1,-1))               
         pool.map(process_func, file_prefixes)
 
     # Drop to IPython interactive shell
