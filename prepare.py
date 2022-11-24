@@ -145,9 +145,8 @@ def select_hits(hits, truth, particles, pt_min=0):
             .assign(r=r, phi=phi)
             .merge(truth[['hit_id', 'particle_id']], on='hit_id'))
     # Remove duplicate hits
-    hits = hits.loc[
-        hits.groupby(['particle_id', 'layer'], as_index=False).r.idxmin()
-    ]
+    #hits = hits.loc[hits.groupby(['particle_id', 'layer'], as_index=False).r.idxmin()] #Original code
+    hits.drop_duplicates(subset=['layer', 'particle_id']) #--> what I've replace it with
     return hits
 
 def split_detector_sections(hits, phi_edges, eta_edges):
@@ -255,18 +254,29 @@ def main():
     logging.info('Writing outputs to ' + output_dir)
 
 
-    
+    prefix=np.linspace(0,1000,1000)
+    pt_min= 0. # GeV
+    phi_slope_max= 0.0006
+    z0_max= 200
+    n_phi_sections= 8
+    n_eta_sections= 2
+    eta_range= [-5, 5]
+    phi_range=(-np.pi, np.pi)
+
+
+    print('hERE:',file_prefixes)
+
+    process_event(file_prefixes[0], output_dir, pt_min, n_eta_sections, n_phi_sections, eta_range, phi_range, phi_slope_max, z0_max)
     
 
-    # Process input files with a worker pool
-    with mp.Pool(processes=args.n_workers) as pool:
-        process_func = partial(process_event, output_dir=output_dir,
-                               phi_range=(-np.pi, np.pi), **config['selection'])
+    
 
-        print('HERE:',process_func)
-        print('HERE2:',file_prefixes)        
-        print('HERE3',process_func.reshape(1,-1))               
-        pool.map(process_func, file_prefixes)
+
+    # Process input files with a worker pool --> This thing craps the bed
+    #with mp.Pool(processes=args.n_workers) as pool:
+        #process_func = partial(process_event, output_dir=output_dir,
+                               #phi_range=(-np.pi, np.pi), **config['selection'])           
+        #pool.map(process_func, file_prefixes)
 
     # Drop to IPython interactive shell
     if args.interactive:

@@ -1,6 +1,8 @@
 # Input/output configuration
 input_dir: data/example_event/raw
-output_dir: data/example_event/graph-no-cut
+output_dir: test_output
+#output_dir: data/example_event/graph-no-cut
+
 n_files: 1
 
 # Graph building configuration
