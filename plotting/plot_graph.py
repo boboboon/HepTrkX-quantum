@@ -334,14 +334,15 @@ def plot_single_cartesian(filename,n_section):
         ax[1].set_aspect('equal')
         ax[0].set_title('Only Fake Edges (After Preprocessing)')
         ax[1].set_title('Only True Edges (After Preprocessing)')
-        plt.savefig(pdf_dir+'subgraph_cartesian.pdf')
-        plt.savefig(png_dir+'subgraph_cartesian.png')
+        plt.savefig(pdf_dir+'/subgraph_cartesian.pdf')
+        plt.savefig(png_dir+'/subgraph_cartesian.png')
         
 
         print('Plot saved to: ' + pdf_dir+'subgraph_cartesian.pdf')
         print('Plot saved to: ' + png_dir+'subgraph_cartesian.png')
 def main():
-    input_dir = 'data/example_event/graph-cut-1pt'
+    #input_dir = '/Users/lucascurtin/Desktop/QGNN Repos/HepTrkX-quantum/data/example_event/graph-cut-1pt'
+    input_dir='/Users/lucascurtin/Desktop/QGNN Repos/HepTrkX-quantum/test_output'
     n_section = 8
     n_files = 16
    
@@ -357,7 +358,7 @@ def main():
     #plot_combined(filenames,n_section)
 
 if __name__ == '__main__':
-    pdf_dir = 'pdf/graphs/'
-    png_dir = 'png/graphs/'
-    gif_dir = 'gif/'
+    pdf_dir = '/Users/lucascurtin/Desktop/QGNN Repos/HepTrkX-quantum/new_plots'#pdf/graphs/'
+    png_dir = '/Users/lucascurtin/Desktop/QGNN Repos/HepTrkX-quantum/new_plots'#png/graphs/'
+    gif_dir = '/Users/lucascurtin/Desktop/QGNN Repos/HepTrkX-quantum/new_plots'#gif/'
     main()
