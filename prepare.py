@@ -146,7 +146,7 @@ def select_hits(hits, truth, particles, pt_min=0):
             .merge(truth[['hit_id', 'particle_id']], on='hit_id'))
     # Remove duplicate hits
     #hits = hits.loc[hits.groupby(['particle_id', 'layer'], as_index=False).r.idxmin()] #Original code
-    hits.drop_duplicates(subset=['layer', 'particle_id']) #--> what I've replace it with
+    hits.drop_duplicates(subset=['layer', 'particle_id']) #--> what I've replaced it with
     return hits
 
 def split_detector_sections(hits, phi_edges, eta_edges):
@@ -254,19 +254,28 @@ def main():
     logging.info('Writing outputs to ' + output_dir)
 
 
-    prefix=np.linspace(0,1000,1000)
-    pt_min= 0. # GeV
+    #pt_min= 0. # GeV
+    #phi_slope_max= 0.0006
+    #z0_max= 200
+    #n_phi_sections= 8
+    #n_eta_sections= 2
+    #eta_range= [-5, 5]
+    #phi_range=(-np.pi, np.pi)
+
+    pt_min= 1. # GeV
     phi_slope_max= 0.0006
-    z0_max= 200
-    n_phi_sections= 8
-    n_eta_sections= 2
+    z0_max= 100
+    n_phi_sections= 1
+    n_eta_sections= 1
     eta_range= [-5, 5]
     phi_range=(-np.pi, np.pi)
 
 
-    print('hERE:',file_prefixes)
+    print('HERE:',file_prefixes)
 
-    process_event(file_prefixes[0], output_dir, pt_min, n_eta_sections, n_phi_sections, eta_range, phi_range, phi_slope_max, z0_max)
+    for i in range(len(file_prefixes)):
+
+        process_event(file_prefixes[i], output_dir, pt_min, n_eta_sections, n_phi_sections, eta_range, phi_range, phi_slope_max, z0_max)
     
 
     
