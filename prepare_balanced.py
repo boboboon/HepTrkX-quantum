@@ -284,11 +284,9 @@ def main():
 
     print('HERE:',file_prefixes)
 
+    for i in range(2):
 
-    #we've got the first 2 events fully mapped out so I'm just going to do another 8 events so we have 10 events to work with.
-    for i in range(8):
-
-        process_event(file_prefixes[i+2], output_dir, pt_min, n_eta_sections, n_phi_sections, eta_range, phi_range, phi_slope_max, z0_max)
+        process_event(file_prefixes[i], output_dir, pt_min, n_eta_sections, n_phi_sections, eta_range, phi_range, phi_slope_max, z0_max)
     
 
     

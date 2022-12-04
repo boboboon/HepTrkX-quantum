@@ -146,8 +146,11 @@ def find_layer(value):
 
 
 def main():
-    train_dir = 'data/graph_data/train'
-    valid_dir = 'data/graph_data/valid'
+    #train_dir = 'data/graph_data/train'
+    #valid_dir = 'data/graph_data/valid'
+
+    train_dir = '/Users/lucascurtin/Desktop/QGNN Repos/HepTrkX-quantum/data/10_events/train'
+    valid_dir = '/Users/lucascurtin/Desktop/QGNN Repos/HepTrkX-quantum/data/10_events/valid'
    
     train_dir = os.path.expandvars(train_dir)
     train_names = sorted([os.path.join(train_dir, f) for f in os.listdir(train_dir) 

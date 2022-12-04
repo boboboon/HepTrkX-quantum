@@ -1,0 +1,7 @@
+# Input/output configuration
+input_dir: data/all_events/raw
+output_dir: data/two_events
+#output_dir: data/example_event/graph-no-cut
+
+n_files: 100
+
