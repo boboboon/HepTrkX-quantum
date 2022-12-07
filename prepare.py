@@ -282,18 +282,9 @@ def main():
     eta_range= [-5, 5]
     phi_range=(-np.pi, np.pi)
 
-    #Now going to try g000 for a couple of events but with no cuts
-    pt_min= 0 # GeV
-    phi_slope_max= 10000
-    z0_max= 10000
-    n_phi_sections= 1
-    n_eta_sections= 1
-    eta_range= [-5, 5]
-    phi_range=(-np.pi, np.pi)
-
 
     
-    for i in range(4):
+    for i in range(100):
 
         process_event(file_prefixes[i], output_dir, pt_min, n_eta_sections, n_phi_sections, eta_range, phi_range, phi_slope_max, z0_max)
     
