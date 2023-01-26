@@ -108,7 +108,7 @@ def plot_cylindrical(filenames,n_section):
         ax[0].legend(handles=legend_elements)
         ax[1].legend(handles=legend_elements)
 
-        plt.savefig(pdf_dir+'/Cylindrical_initial_graph_colored.pdf')
+        #plt.savefig(pdf_dir+'/Cylindrical_initial_graph_colored.pdf')
         plt.savefig(png_dir+'/Cylindrical_initial_graph_colored.png')
 def plot_cartesian(filenames,n_section,n_files):
         fig, ax = plt.subplots(1,2,figsize = (10,5),sharey=True, tight_layout=True)
@@ -167,7 +167,7 @@ def plot_cartesian(filenames,n_section,n_files):
         ax[1].set_aspect('equal')
         ax[0].set_title('Only Fake Edges (After Preprocessing)')
         ax[1].set_title('Only True Edges (After Preprocessing)')
-        plt.savefig(pdf_dir+'/Cartesian.pdf')
+        #plt.savefig(pdf_dir+'/Cartesian.pdf')
         plt.savefig(png_dir+'/Cartesian.png')
         
 
@@ -282,7 +282,7 @@ def plot_combined(filenames,n_section):
         ax[2].set_xlabel('x [mm]\n\n (c)')
         ax[2].set_ylabel('y [mm]')
 
-        plt.savefig(pdf_dir+'\Initial_graph_colored_combined.pdf')
+        #plt.savefig(pdf_dir+'\Initial_graph_colored_combined.pdf')
         plt.savefig(png_dir+'\Initial_graph_colored_combined.png')
 
 def plot_single_cartesian(filename,n_section):
@@ -334,15 +334,18 @@ def plot_single_cartesian(filename,n_section):
         ax[1].set_aspect('equal')
         ax[0].set_title('Only Fake Edges (After Preprocessing)')
         ax[1].set_title('Only True Edges (After Preprocessing)')
-        plt.savefig(pdf_dir+'/subgraph_cartesian.pdf')
+       #plt.savefig(pdf_dir+'/subgraph_cartesian.pdf')
         plt.savefig(png_dir+'/subgraph_cartesian.png')
         
 
         print('Plot saved to: ' + pdf_dir+'/subgraph_cartesian.pdf')
         print('Plot saved to: ' + png_dir+'/subgraph_cartesian.png')
+
+
+    
 def main():
     #input_dir = '/Users/lucascurtin/Desktop/QGNN Repos/HepTrkX-quantum/data/example_event/graph-cut-1pt'
-    input_dir='test_output/example_event'
+    input_dir='/Users/lucascurtin/Desktop/QGNN Repos/HepTrkX-quantum/data/tuysuz_100_events/all'
     n_section = 8
     n_files = 16
 
@@ -353,18 +356,19 @@ def main():
                 if f.startswith('event') and f.endswith('.npz')])
     filenames[:n_files] if n_files is not None else filenames
 
-    plot_3d(filenames,n_section,n_files, make_gif=False)
-    plot_cartesian([filenames[i*2] for i in range(n_files//2)],n_section,n_files//2)
+    #plot_3d(filenames,n_section,n_files, make_gif=False)
+    #plot_cartesian([filenames[i*2] for i in range(n_files//2)],n_section,n_files//2)
+    plot_cartesian(filenames,n_section,n_files)
     
-    plot_cylindrical(filenames,n_section)
-    plot_combined(filenames,n_section)
+    #plot_cylindrical(filenames,n_section)
+    #plot_combined(filenames,n_section)
 
-    for i in range(len(filenames)):
+    #for i in range(len(filenames)):
 
-        plot_single_cartesian(filenames[i],n_section)
+        #plot_single_cartesian(filenames[i],n_section)
 
 if __name__ == '__main__':
     pdf_dir = 'single_event/pdfs'#pdf/graphs/'
-    png_dir = 'single_event/pngs'#png/graphs/'
+    png_dir = '/Users/lucascurtin/Desktop/QGNN Repos/HepTrkX-quantum/personal_plots/png_dir/'#png/graphs/'
     gif_dir = 'single_event/gifs'#gif/'
     main()

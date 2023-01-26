@@ -283,8 +283,9 @@ def main():
     phi_range=(-np.pi, np.pi)
 
 
+    print(file_prefixes)
     
-    for i in range(100):
+    for i in range(125):
 
         process_event(file_prefixes[i], output_dir, pt_min, n_eta_sections, n_phi_sections, eta_range, phi_range, phi_slope_max, z0_max)
     
