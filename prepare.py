@@ -1,8 +1,5 @@
-# Inherited from HepTrkX: https://github.com/HEPTrkX/heptrkx-gnn-tracking
-
 """
 Data preparation script for GNN tracking.
-
 This script processes the TrackML dataset and produces graph data on disk.
 """
 
@@ -26,8 +23,7 @@ def parse_args():
     """Parse command line arguments."""
     parser = argparse.ArgumentParser('prepare.py')
     add_arg = parser.add_argument
-    #add_arg('config', nargs='?', default='configs/prepare_trackml.yaml') <-- This file isn't in the config so trying prep below
-    add_arg('config', nargs='?', default='configs/prep.yaml') 
+    add_arg('config', nargs='?', default='configs/prepare_trackml.yaml')
     add_arg('--n-workers', type=int, default=1)
     add_arg('--task', type=int, default=0)
     add_arg('--n-tasks', type=int, default=1)
@@ -52,7 +48,6 @@ def select_segments(hits1, hits2, phi_slope_max, z0_max):
     Construct a list of selected segments from the pairings
     between hits1 and hits2, filtered with the specified
     phi slope and z0 criteria.
-
     Returns: pd DataFrame of (index_1, index_2), corresponding to the
     DataFrame hit label-indices in hits1 and hits2, respectively.
     """
@@ -145,8 +140,9 @@ def select_hits(hits, truth, particles, pt_min=0):
             .assign(r=r, phi=phi)
             .merge(truth[['hit_id', 'particle_id']], on='hit_id'))
     # Remove duplicate hits
-    #hits = hits.loc[hits.groupby(['particle_id', 'layer'], as_index=False).r.idxmin()] #Original code
-    hits.drop_duplicates(subset=['layer', 'particle_id']) #--> what I've replaced it with
+    hits = hits.loc[
+        hits.groupby(['particle_id', 'layer'], as_index=False).r.idxmin()
+    ]
     return hits
 
 def split_detector_sections(hits, phi_edges, eta_edges):
@@ -213,6 +209,54 @@ def process_event(prefix, output_dir, pt_min, n_eta_sections, n_phi_sections,
     logging.info('Event %i, writing graphs', evtid)
     save_graphs(graphs, filenames)
 
+def process_event_1(prefix, output_dir, pt_min, n_eta_sections, n_phi_sections,
+                  eta_range, phi_range, phi_slope_max, z0_max):
+    
+    # Load the data
+    evtid = int(prefix[-9:])
+    logging.info('Event %i, loading data' % evtid)
+    hits, particles, truth = trackml.dataset.load_event(
+        prefix, parts=['hits', 'particles', 'truth'])
+
+    # Apply hit selection
+    logging.info('Event %i, selecting hits' % evtid)
+    hits = select_hits(hits, truth, particles, pt_min=pt_min).assign(evtid=evtid)
+
+    # Divide detector into sections
+    #phi_range = (-np.pi, np.pi)
+    phi_edges = np.linspace(*phi_range, num=n_phi_sections+1)
+    eta_edges = np.linspace(*eta_range, num=n_eta_sections+1)
+    hits_sections = split_detector_sections(hits, phi_edges, eta_edges)
+
+    # Graph features and scale
+    feature_names = ['r', 'phi', 'z']
+    feature_scale = np.array([1000., np.pi / n_phi_sections, 1000.])
+
+    # Define adjacent layers
+    n_det_layers = 10
+    l = np.arange(n_det_layers)
+    layer_pairs = np.stack([l[:-1], l[1:]], axis=1)
+
+    # Construct the graph
+    logging.info('Event %i, constructing graphs' % evtid)
+    graphs = [construct_graph(section_hits, layer_pairs=layer_pairs,
+                              phi_slope_max=phi_slope_max, z0_max=z0_max,
+                              feature_names=feature_names,
+                              feature_scale=feature_scale)
+              for section_hits in hits_sections]
+
+    # Write these graphs to the output directory
+    try:
+        base_prefix = os.path.basename(prefix)
+        filenames = [os.path.join(output_dir, '%s_g%03i' % (base_prefix, i))
+                     for i in range(len(graphs))]
+    except Exception as e:
+        logging.info(e)
+    logging.info('Event %i, writing graphs', evtid)
+    save_graphs(graphs, filenames)
+
+        
+
 def main():
     """Main function"""
 
@@ -229,7 +273,7 @@ def main():
 
     # Load configuration
     with open(args.config) as f:
-        config = yaml.load(f,Loader=yaml.Loader)
+        config = yaml.full_load(f)
     if args.task == 0:
         logging.info('Configuration: %s' % config)
 
@@ -254,25 +298,7 @@ def main():
     logging.info('Writing outputs to ' + output_dir)
 
 
-    #pt_min= 0. # GeV
-    #phi_slope_max= 0.0006
-    #z0_max= 200
-    #n_phi_sections= 8
-    #n_eta_sections= 2
-    #eta_range= [-5, 5]
-    #phi_range=(-np.pi, np.pi)
 
-
-    # This is for 1 subgraph for each event:
-    #pt_min= 1. # GeV
-    #phi_slope_max= 0.0006
-    #z0_max= 100
-    #n_phi_sections= 1
-    #n_eta_sections= 1
-    #eta_range= [-5, 5]
-    #phi_range=(-np.pi, np.pi)
-
-    # Let's try the full 16 subgraphs for 2 events
 
     pt_min= 1. # GeV
     phi_slope_max= 0.0006
@@ -282,22 +308,12 @@ def main():
     eta_range= [-5, 5]
     phi_range=(-np.pi, np.pi)
 
+    # Process input files with a worker pool
+    print('HERE:',file_prefixes)
 
-    print(file_prefixes)
-    
-    for i in range(125):
+    for i in range(2):
 
         process_event(file_prefixes[i], output_dir, pt_min, n_eta_sections, n_phi_sections, eta_range, phi_range, phi_slope_max, z0_max)
-    
-
-    
-
-
-    # Process input files with a worker pool --> This thing was the original
-    #with mp.Pool(processes=args.n_workers) as pool:
-        #process_func = partial(process_event, output_dir=output_dir,
-                               #phi_range=(-np.pi, np.pi), **config['selection'])           
-        #pool.map(process_func, file_prefixes)
 
     # Drop to IPython interactive shell
     if args.interactive:

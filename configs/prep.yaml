@@ -1,9 +1,9 @@
 # Input/output configuration
-input_dir: data/example_event/raw
-output_dir: test_output
+input_dir: data/all_events/raw
+output_dir: /Users/lucascurtin/Desktop/QGNN Repos/HepTrkX-quantum/data/piecewise_data
 #output_dir: data/example_event/graph-no-cut
 
-n_files: 1
+n_files: 10
 
 # Graph building configuration
 selection:
